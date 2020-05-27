@@ -111,7 +111,7 @@ console.log('sound_ids ', sound_ids);
 for (var i = 0; i < n_sound * n_sound_repeat; i++) {
     sound_stimuli.push({
         type: 'audio-keyboard-response',
-	    stimulus: [sound_prefix + 'stimuli/sound_' + sound_ids[i] + '.mp3'],
+	    stimulus: [sound_prefix + sound_ids[i] + '.mp3'],
 	    choices: jsPsych.NO_KEYS
     });
 }
