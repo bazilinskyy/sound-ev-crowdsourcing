@@ -169,7 +169,7 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
     timeline.push(slider_block);  // page with the sliders
     console.log(i, sound_stimuli[i]);
     // don't add the between block after the last trial
-	if ((i + 1) % n_sound_break == 0 && i != 0) {
+	if ((i + 1) % n_sound_break == 0 && i != 0 && i != n_sound * n_sound_repeat - 1) {
 		console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
 	    timeline.push(between_blocks[between_blocks_count]);
 	    between_blocks_count++;
