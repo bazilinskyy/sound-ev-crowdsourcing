@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Experiment page</title>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='jsPsych/jspsych.js'></script>
+    <script src='jsPsych/plugins/jspsych-html-keyboard-response.js'></script>
+    <script src='jsPsych/plugins/jspsych-call-function.js'></script>
+    <script src='jsPsych/plugins/jspsych-image-keyboard-response.js'></script>
+    <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
+    <link href='jsPsych/css/jspsych.css' rel='stylesheet' type='text/css'></link>
+    <link href='css/experiment.css' rel='stylesheet' type='text/css'></link>
+    <link rel='icon' type='image/png' href='/img/favicon.png' />
+	<style>
+	#input-codeblock input{
+	    font-size: 18px;
+        width: 20%;
+	}
+	</style>
+  </head>
+  <body>
+  </body>
+  <script>
+
+
+// by Pavlo Bazilinskyy <p.bazilinskyy@tudelft.nl>
+
+/**
+ * Constants.
+ **/
+var n_sound = 11; // number of images
+var n_sound_repeat = 2; // number of repeats of each condition
+var n_sound_break = 10; // number of images between each break
+var sound_prefix = 'sounds/sound_'; // prefix for videos
+var image_prefix = 'img/'; // prefix for images
+
+ /**
+ * Returns a random integer between min (inclusive) and max (inclusive).
+ * The value is no lower than min (or the next integer greater than min
+ * if min isn't an integer) and no greater than max (or the next integer
+ * lower than max if max isn't an integer).
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Get finish code for the worker.
+ */
+function getFinishCode() {
+    var timestamp = window.performance.timing.navigationStart + window.performance.now();
+    var current_time = Math.round(timestamp);
+    var random_num = getRandomInt(1, 10000);
+    finish_code = 'R7' + current_time + 'CM' + random_num + '8J';
+    return finish_code;
+}
+
+var finish_code = getFinishCode();
+
+/**
+ * Shuffles array in place.
+ * @param {Array} a items An array containing the items.
+ */
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+/**
+ * Get unique elements from the array.
+ */
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+
+// Arrays for storing data
+var sound_ids = [];  // IDs of videos in stimuli
+var between_blocks = []; // instructions between blocks
+var sound_stimuli = []; // blocks with images
+
+// define instructions block
+var instructions_block = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>You will listen to ' + n_sound * n_sound_repeat + ' sounds. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Press \'C\' to proceed to the first sound. </p>',
+    choices: ['C'],
+    on_finish: function(data) {
+        jsPsych.data.addDataToLastTrial({
+            worker_code: finish_code
+        });
+    }
+};
+// populate arrays with image IDs
+for (var i = 1; i <= n_sound; i++) {
+	for (var j = 1; j <= n_sound_repeat; j++) { 
+	    sound_ids.push(i);
+	}
+}
+sound_ids = shuffle(sound_ids);  // shuffle IDs
+console.log('sound_ids ', sound_ids);
+// build array with images with stimuli
+for (var i = 0; i < n_sound * n_sound_repeat; i++) {
+    sound_stimuli.push({
+        type: 'audio-keyboard-response',
+	    stimulus: [sound_prefix + 'stimuli/sound_' + sound_ids[i] + '.mp3'],
+	    choices: jsPsych.NO_KEYS
+    });
+}
+// build between blocks
+for (var i = 1; i < n_sound * n_sound_repeat / n_sound_break; i++) {
+    var images_done = n_sound_break * i;
+    between_blocks.push({
+        type: 'html-keyboard-response',
+        stimulus: '<p>You have now completed ' + images_done + ' sounds out of ' + n_sound * n_sound_repeat + '. When ready press \'C\' to proceed to the next batch.</p>',
+        choices: ['C']
+    });
+}
+
+// add block to array
+var slider_block = {
+    type: 'survey-html-form-slider',
+    require_movement: true,
+    html: '<div id="jspsych-content" class="jspsych-content"></p><div id="jspsych-html-slider-response-wrapper" style="margin: 100px 0px;"><div><p style="width: 1000px">Please rate the following statements based on the sound that you just listened to. Provide your answers by moving the sliders on the scale: 0 = completely disagree, 100 = completely agree. You will not be able to continue before moving all sliders.</p></div><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-0" name="slider-0" size="5"><div><div style="display: inline-block; position: absolute; left:-10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">0</span></div><div style="display: inline-block; position: absolute; left:10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">20</span></div><div style="display: inline-block; position: absolute; left:30%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">40</span></div><div style="display: inline-block; position: absolute; left:50%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">60</span></div><div style="display: inline-block; position: absolute; left:70%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">80</span></div><div style="display: inline-block; position: absolute; left:90%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">100</span></div></div></div><p style="width: 1000px"><strong>This concept was easy to understand</strong>.</p><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-1" name="slider-1"><div><div style="display: inline-block; position: absolute; left:-10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">0</span></div><div style="display: inline-block; position: absolute; left:10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">20</span></div><div style="display: inline-block; position: absolute; left:30%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">40</span></div><div style="display: inline-block; position: absolute; left:50%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">60</span></div><div style="display: inline-block; position: absolute; left:70%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">80</span></div><div style="display: inline-block; position: absolute; left:90%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">100</span></div></div></div><p style="width: 1000px"><strong>I like this concept as a way of communication</strong>.</p><div class="jspsych-html-slider-response-container" style="position:relative; margin: 3em auto 1.5em auto; width:1000px;"><input type="range" value="50" min="0" max="100" step="1" style="width: 100%;" id="slider-2" name="slider-2"><div><div style="display: inline-block; position: absolute; left:-10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">0</span></div><div style="display: inline-block; position: absolute; left:10%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">20</span></div><div style="display: inline-block; position: absolute; left:30%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">40</span></div><div style="display: inline-block; position: absolute; left:50%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">60</span></div><div style="display: inline-block; position: absolute; left:70%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">80</span></div><div style="display: inline-block; position: absolute; left:90%; text-align: center; width: 20%;"><span style="text-align: center; font-size: 80%;">100</span></div></div></div><p style="width: 1000px"><strong>The concept is intuitive for signaling \'Please do NOT cross the road\'</strong>.</p></div>',
+    items: 6
+};
+
+// block for sending data
+var save_data_block = {
+    type: 'call-function',
+    func: function() {
+        $.ajax({
+                type: 'POST',
+                url: '/experiment-data',
+                data: jsPsych.data.get().json(),
+                contentType: 'application/json'
+            })
+            .done(function() {
+                jsPsych.data.reset();
+            })
+            .fail(function() {
+                alert('A problem occurred while writing to the database. Please contact the researcher for more information.')
+                window.location.href = '/';
+            })
+    }
+}
+
+/**
+ * Create experiment timeline array
+ **/
+var timeline = [];
+timeline.push(instructions_block);
+// iterate over images
+var between_blocks_count = 0;  // counter of shown between blocks
+for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
+	// check if the last image was reached
+    if (i >= n_sound * n_sound_repeat) {
+        break;
+    }
+    timeline.push(sound_stimuli[i]);  // page with the stimulus
+    timeline.push(slider_block);  // page with the sliders
+    console.log(i, sound_stimuli[i]);
+    // don't add the between block after the last trial
+	if ((i + 1) % n_sound_break == 0 && i != 0) {
+		console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
+	    timeline.push(between_blocks[between_blocks_count]);
+	    between_blocks_count++;
+	}   
+}
+// save data
+timeline.push(save_data_block);
+
+console.log(sound_stimuli);
+console.log(timeline);
+console.log(between_blocks);
+
+/* Start the experiment */
+jsPsych.init({
+	// auto_preload: false,
+    show_preload_progress_bar: true,
+    preload_images: [image_prefix + 'black_frame.png'],
+    timeline: timeline,
+    max_load_time: 3000000,
+    on_finish: function() {
+        window.location.href = 'finish?work=' + finish_code;
+    }
+});
+</script>
+</html>
