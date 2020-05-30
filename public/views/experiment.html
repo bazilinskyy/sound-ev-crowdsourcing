@@ -105,26 +105,17 @@ var instructions_block = {
     }
 };
 // page with instructions for the sound in the beginning
+// text for check from https://www.eslfast.com/supereasy/se/supereasy002.htm
 var sound_check_instructions_first = {
     type: 'html-keyboard-response',
     stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. When you will be listening to the phrase, adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment. Press \'C\' to proceed.</p>',
-    choices: ['C'],
-    on_finish: function(data) {
-        jsPsych.data.addDataToLastTrial({
-            worker_code: finish_code
-        });
-    }
+    choices: ['C']
 };
 // page with instructions for the sound check during blocks
 var sound_check_instructions = {
     type: 'html-keyboard-response',
     stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will locad automatically. Press \'C\' to proceed.</p>',
-    choices: ['C'],
-    on_finish: function(data) {
-        jsPsych.data.addDataToLastTrial({
-            worker_code: finish_code
-        });
-    }
+    choices: ['C']
 };
 // populate arrays with sound check IDs
 for (var i = 1; i <= n_sound_check; i++) {
@@ -136,12 +127,17 @@ sound_check_ids = shuffle(sound_check_ids);  // shuffle IDs
 console.log('sound_check_ids ', sound_check_ids);
 // build array with blocks for sound check
 for (var i = 0; i < n_sound_check; i++) {
+    if (i == 0) {
+        var stimulus_str = '<p>Listen carefully to the phrase. Adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment.</p>';
+    } else {
+        var stimulus_str = '<p>Listen carefully to the phrase.</p>';
+    }
     sound_check_blocks.push({
         type: 'audio-keyboard-multiple-responses-release',
         stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
-        choices: ['F'],
+        choices: jsPsych.NO_KEYS,
         trial_ends_after_audio: true,
-        prompt: '<p>Listen carefully to the phrase spoken in English.</p>'
+        prompt: stimulus_str
     });
 }
 // page with input for the phrase in the sound check
