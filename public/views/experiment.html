@@ -115,7 +115,7 @@ console.log('sound_check_ids ', sound_check_ids);
 for (var i = 0; i < n_sound_check; i++) {
     sound_check_blocks.push({
         type: 'audio-keyboard-multiple-responses-release',
-        stimulus: [sound_prefix + '_test_' + sound_check_ids[i] + '.mp3'],
+        stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
         choices: ['F'],
         trial_ends_after_audio: true,
         prompt: '<p>Listen to the sound without switching to a different tab. Do not adjust the sound level. A new page will load after the end of the sound.</p>'
