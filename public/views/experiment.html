@@ -118,10 +118,11 @@ var sound_check_instructions = {
     choices: ['C']
 };
 // populate arrays with sound check IDs
-for (var i = 1; i <= n_sound_check; i++) {
+for (var i = 2; i <= n_sound_check; i++) {
     sound_check_ids.push(i);
 }
-sound_check_ids = shuffle(sound_check_ids);  // shuffle IDs
+// first ID is always the first long phrase
+sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 // define sound check block
 // generated at https://ttsmp3.com/ with British English Amy
 console.log('sound_check_ids ', sound_check_ids);
