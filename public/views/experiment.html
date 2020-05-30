@@ -104,7 +104,18 @@ var instructions_block = {
         });
     }
 };
-// page with instructions for the sound check
+// page with instructions for the sound in the beginning
+var sound_check_instructions_first = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. When you will be listening to the phrase, adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment. Press \'C\' to proceed.</p>',
+    choices: ['C'],
+    on_finish: function(data) {
+        jsPsych.data.addDataToLastTrial({
+            worker_code: finish_code
+        });
+    }
+};
+// page with instructions for the sound check during blocks
 var sound_check_instructions = {
     type: 'html-keyboard-response',
     stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will locad automatically. Press \'C\' to proceed.</p>',
@@ -208,9 +219,8 @@ var save_data_block = {
  **/
 var timeline = [];
 timeline.push(instructions_block);
-timeline.push(sound_check_instructions);
+timeline.push(sound_check_instructions_first);
 timeline.push(sound_check_blocks[0]);
-timeline.push(sound_check_input_block);
 // iterate over images
 var between_blocks_count = 0;  // counter of shown between blocks
 var sound_check_last_id = 0;  // counter of shown between blocks
