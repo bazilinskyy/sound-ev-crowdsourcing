@@ -105,13 +105,6 @@ var instructions_block = {
     }
 };
 // page with instructions for the sound check during blocks
-// text for check from https://www.eslfast.com/supereasy/se/supereasy002.htm
-var sound_check_instructions_1_after = {
-    type: 'html-keyboard-response',
-    stimulus: '<p>Press \'C\' to proceed to the first sound.</p>',
-    choices: ['C']
-};
-// page with instructions for the sound check during blocks
 var sound_check_instructions = {
     type: 'html-keyboard-response',
     stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will locad automatically. Press \'C\' to proceed.</p>',
@@ -125,6 +118,7 @@ for (var i = 2; i <= n_sound_check; i++) {
 sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 // define sound check block
 // generated at https://ttsmp3.com/ with British English Amy
+// text for 1st check from https://www.eslfast.com/supereasy/se/supereasy002.htm
 console.log('sound_check_ids ', sound_check_ids);
 // build array with blocks for sound check
 for (var i = 0; i < n_sound_check; i++) {
@@ -228,7 +222,6 @@ var save_data_block = {
 var timeline = [];
 timeline.push(instructions_block);
 timeline.push(sound_check_blocks[0]);
-timeline.push(sound_check_instructions_1_after);
 // iterate over images
 var between_blocks_count = 0;  // counter of shown between blocks
 var sound_check_last_id = 0;  // counter of shown between blocks
