@@ -9,7 +9,6 @@
     <script src='jsPsych/plugins/jspsych-image-keyboard-response.js'></script>
     <script src='jsPsych/plugins/jspsych-survey-html-form.js'></script>
     <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
-    <script src='jsPsych/plugins/jspsych-audio-keyboard-response.js'></script>
     <script src='jsPsych/plugins/jspsych-audio-keyboard-multiple-responses-release.js'></script>
     <link href='jsPsych/css/jspsych.css' rel='stylesheet' type='text/css'></link>
     <link href='css/experiment.css' rel='stylesheet' type='text/css'></link>
@@ -35,6 +34,7 @@ var n_sound = 10; // number of images
 var n_sound_repeat = 2; // number of repeats of each condition
 var n_sound_break = 10; // number of images between each break
 var n_sound_check = 3; // number of sounds to do sound check
+var n_sounds_per_block = 5; // numer of sounds to save data from
 var sound_prefix = 'sounds/sound_'; // prefix for videos
 var image_prefix = 'img/'; // prefix for images
 
@@ -97,12 +97,7 @@ var sound_check_blocks = []; // blocks with sound checks
 var instructions_block = {
     type: 'html-keyboard-response',
     stimulus: '<p>Imagine that you are a pedestrian standing ont the side of the road. You will listen to ' + n_sound * n_sound_repeat + ' sounds of electric cars driving by you. When the sound is playing, press and HOLD \'F\' when you feel safe to cross the road in front of the car. You can release the button and then press it again multiple times during the sound. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Sometimes you will be asked to listen to a phrase and type what was said.</p><p>The window of your browser should be at least 1300px wide and 800px tall. Please make sure that your audio is on. On the next page, you will listen to a phrase spoken in English. Listen to it carefully. When you will be listening to the phrase, adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment. Press \'C\' to proceed</p>',
-    choices: ['C'],
-    on_finish: function(data) {
-        jsPsych.data.addDataToLastTrial({
-            worker_code: finish_code
-        });
-    }
+    choices: ['C']
 };
 // page with instructions for the sound check during blocks
 var sound_check_instructions = {
@@ -175,7 +170,12 @@ for (var i = 0; i < n_sound * n_sound_repeat; i++) {
 	    stimulus: [sound_prefix + sound_ids[i] + '.mp3'],
 	    choices: ['F'],
 	    trial_ends_after_audio: true,
-	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when you feel that it becomes unsafe the cross.</p>'
+	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when you feel that it becomes unsafe the cross.</p>',
+        on_finish: function(data) {
+            jsPsych.data.addDataToLastTrial({
+                worker_code: finish_code
+            });
+        }
     });
 }
 // build between blocks
@@ -243,6 +243,10 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
     timeline.push(sound_stimuli[i]);  // page with the stimulus
     timeline.push(slider_block);  // page with the sliders
     console.log(i, sound_stimuli[i]);
+    // save data
+    if ((i + 1) % n_sounds_per_block == 0) {
+        timeline.push(save_data_block);
+    }
     // don't add the between block after the last trial
 	if ((i + 1) % n_sound_break == 0 && i != 0 && i != n_sound * n_sound_repeat - 1) {
 		console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
@@ -250,8 +254,6 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 	    between_blocks_count++;
 	}   
 }
-// save data
-timeline.push(save_data_block);
 
 console.log(sound_stimuli);
 console.log(timeline);
