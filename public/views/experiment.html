@@ -133,7 +133,7 @@ for (var i = 0; i < n_sound_check; i++) {
 // page with input for the phrase in the sound check
 var sound_check_input_block = {
     type: 'survey-html-form',
-    html: '<p>Please enter the phrase that you just heard: <input name="input-codeblock" id="input-codeblock" pattern="^/[a-z, ]/i" type="text" required /></p><p>The field will only accept input in the form of letters.</i> (e.g. \'phrase\').</p>'
+    html: '<p>Please enter the phrase that you just heard: <input name="input-codeblock" id="input-codeblock" pattern="^[a-zA-Z!?., ]*$" type="text" required /></p><p>The field will only accept input in the form of letters.</i> (e.g. \'phrase\').</p>'
 };
 // continue before showing the image
 var continue_block = {
