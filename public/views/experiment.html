@@ -7,6 +7,7 @@
     <script src='jsPsych/plugins/jspsych-html-keyboard-response.js'></script>
     <script src='jsPsych/plugins/jspsych-call-function.js'></script>
     <script src='jsPsych/plugins/jspsych-image-keyboard-response.js'></script>
+    <script src='jsPsych/plugins/jspsych-survey-html-form.js'></script>
     <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
     <script src='jsPsych/plugins/jspsych-audio-keyboard-response.js'></script>
     <script src='jsPsych/plugins/jspsych-audio-keyboard-multiple-responses-release.js'></script>
@@ -95,7 +96,18 @@ var sound_check_blocks = []; // blocks with sound checks
 // define instructions block
 var instructions_block = {
     type: 'html-keyboard-response',
-    stimulus: '<p>You will listen to ' + n_sound * n_sound_repeat + ' sounds. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Please put the volume. Please make sure that your audio is on. The window of your browser should be at least 1300px wide and 800px tall. Press \'C\' to proceed to the first sound. </p>',
+    stimulus: '<p>You will listen to ' + n_sound * n_sound_repeat + ' sounds. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Please put the volume. Please make sure that your audio is on. The window of your browser should be at least 1300px wide and 800px tall. Press \'C\' to proceed to the first sound.</p>',
+    choices: ['C'],
+    on_finish: function(data) {
+        jsPsych.data.addDataToLastTrial({
+            worker_code: finish_code
+        });
+    }
+};
+// page with instructions for the sound check
+var sound_check_instructions = {
+    type: 'html-keyboard-response',
+    stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will locad automatically. Press \'C\' to proceed.</p>',
     choices: ['C'],
     on_finish: function(data) {
         jsPsych.data.addDataToLastTrial({
@@ -118,9 +130,14 @@ for (var i = 0; i < n_sound_check; i++) {
         stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
         choices: ['F'],
         trial_ends_after_audio: true,
-        prompt: '<p>Listen to the sound without switching to a different tab. Do not adjust the sound level. A new page will load after the end of the sound.</p>'
+        prompt: '<p>Listen carefully to the phrase spoken in English.</p>'
     });
 }
+// page with input for the phrase in the sound check
+var sound_check_input_block = {
+    type: 'survey-html-form',
+    html: '<p>Please enter the phrase that you just heard: <input name="input-codeblock" id="input-codeblock" pattern="^[A-Za-z]" type="text" required /></p><p>The field will only accept input in the form of letters.</i> (e.g. \'phrase\').</p>'
+};
 
 // locations of sound check
 for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break; i++) {
@@ -191,7 +208,9 @@ var save_data_block = {
  **/
 var timeline = [];
 timeline.push(instructions_block);
+timeline.push(sound_check_instructions);
 timeline.push(sound_check_blocks[0]);
+timeline.push(sound_check_input_block);
 // iterate over images
 var between_blocks_count = 0;  // counter of shown between blocks
 var sound_check_last_id = 0;  // counter of shown between blocks
@@ -206,7 +225,9 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
     // add sound check block
     if (sound_check_locations.includes(i)) {
         sound_check_last_id++; // increase counter of sound check black added
+        timeline.push(sound_check_instructions);
         timeline.push(sound_check_blocks[sound_check_last_id]);
+        timeline.push(sound_check_input_block);
         console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
     }
     // don't add the between block after the last trial
