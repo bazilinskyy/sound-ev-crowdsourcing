@@ -121,7 +121,7 @@ jsPsych.plugins["audio-keyboard-multiple-responses-release"] = (function() {
       //   response.rt = Math.round(response.rt * 1000);
       // }
       var trial_data = {
-        stimulus: JSON.stringify(trial.sources),
+        stimulus: JSON.stringify(trial.stimulus),
         rts: responses_collected
       };
 
