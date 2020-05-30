@@ -9,6 +9,7 @@
     <script src='jsPsych/plugins/jspsych-image-keyboard-response.js'></script>
     <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
     <script src='jsPsych/plugins/jspsych-audio-keyboard-response.js'></script>
+    <script src='jsPsych/plugins/jspsych-audio-keyboard-multiple-responses-release.js'></script>
     <link href='jsPsych/css/jspsych.css' rel='stylesheet' type='text/css'></link>
     <link href='css/experiment.css' rel='stylesheet' type='text/css'></link>
     <link rel='icon' type='image/png' href='/img/favicon.png' />
@@ -32,6 +33,7 @@
 var n_sound = 10; // number of images
 var n_sound_repeat = 2; // number of repeats of each condition
 var n_sound_break = 10; // number of images between each break
+var n_sound_check = 3; // number of sounds to do sound check
 var sound_prefix = 'sounds/sound_'; // prefix for videos
 var image_prefix = 'img/'; // prefix for images
 
@@ -42,7 +44,7 @@ var image_prefix = 'img/'; // prefix for images
  * lower than max if max isn't an integer).
  * Using Math.round() will give you a non-uniform distribution!
  */
-function getRandomInt(min, max) {
+function getRandomInt();(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -85,9 +87,10 @@ function onlyUnique(value, index, self) {
 
 // Arrays for storing data
 var sound_ids = [];  // IDs of videos in stimuli
+var sound_check_ids = [];  // IDs of sounds to do sound check
+var sound_check_locations = [];  // Locations of sound check
 var between_blocks = []; // instructions between blocks
 var sound_stimuli = []; // blocks with images
-
 // define instructions block
 var instructions_block = {
     type: 'html-keyboard-response',
@@ -99,7 +102,34 @@ var instructions_block = {
         });
     }
 };
-// populate arrays with image IDs
+// populate arrays with sound check IDs
+for (var i = 1; i <= n_sound_check; i++) {
+    sound_check_ids.push(i);
+}
+sound_check_ids = shuffle(sound_check_ids);  // shuffle IDs
+// define sound check block
+// generated at https://ttsmp3.com/ with British English Amy
+console.log('sound_check_ids ', sound_check_ids);
+// build array with blocks for sound check
+for (var i = 0; i < n_sound_check; i++) {
+    sound_check_blocks.push({
+        type: 'audio-keyboard-multiple-responses-release',
+        stimulus: [sound_prefix + '_test_' + sound_check_ids[i] + '.mp3'],
+        choices: ['F'],
+        trial_ends_after_audio: true,
+        prompt: '<p>Listen to the sound without switching to a different tab. Do not adjust the sound level. A new page will load after the end of the sound.</p>'
+    });
+}
+
+// locations of sound check
+for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break; i++) {
+    // pick location within the block
+    var id = getRandomInt(i * n_sound_break, (i + 1) * n_sound_break - 1);
+    sound_check_locations.push(id);
+}
+console.log('sound_check_locations ', sound_check_locations);
+
+// populate arrays with sound IDs
 for (var i = 1; i <= n_sound; i++) {
 	for (var j = 1; j <= n_sound_repeat; j++) { 
 	    sound_ids.push(i);
@@ -107,12 +137,12 @@ for (var i = 1; i <= n_sound; i++) {
 }
 sound_ids = shuffle(sound_ids);  // shuffle IDs
 console.log('sound_ids ', sound_ids);
-// build array with images with stimuli
+// build array with audio stimuli
 for (var i = 0; i < n_sound * n_sound_repeat; i++) {
     sound_stimuli.push({
-        type: 'audio-keyboard-response',
+        type: 'audio-keyboard-multiple-responses-release',
 	    stimulus: [sound_prefix + sound_ids[i] + '.mp3'],
-	    choices: jsPsych.NO_KEYS,
+	    choices: ['F'],
 	    trial_ends_after_audio: true,
 	    prompt: '<p>Listen to the sound without switching to a different tab. Do not adjust the sound level. A new page will load after the end of the sound.</p>'
     });
@@ -160,8 +190,10 @@ var save_data_block = {
  **/
 var timeline = [];
 timeline.push(instructions_block);
+timeline.push(sound_check_blocks[0]);
 // iterate over images
 var between_blocks_count = 0;  // counter of shown between blocks
+var sound_check_last_id = 0;  // counter of shown between blocks
 for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 	// check if the last image was reached
     if (i >= n_sound * n_sound_repeat) {
@@ -170,6 +202,12 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
     timeline.push(sound_stimuli[i]);  // page with the stimulus
     timeline.push(slider_block);  // page with the sliders
     console.log(i, sound_stimuli[i]);
+    // add sound check block
+    if (sound_check_locations.includes(i)) {
+        sound_check_last_id++; // increase counter of sound check black added
+        timeline.push(sound_check_blocks[sound_check_last_id]);
+        console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
+    }
     // don't add the between block after the last trial
 	if ((i + 1) % n_sound_break == 0 && i != 0 && i != n_sound * n_sound_repeat - 1) {
 		console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
