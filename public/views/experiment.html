@@ -133,7 +133,7 @@ for (var i = 0; i < n_sound_check; i++) {
 // page with input for the phrase in the sound check
 var sound_check_input_block = {
     type: 'survey-html-form',
-    html: '<p>Please enter the phrase that you just heard: <input name="input-codeblock" id="input-codeblock" pattern="/^[a-zA-Z\s]*$/" type="text" required /></p><p>The field will only accept input in the form of letters.</i> (e.g. \'phrase\').</p>'
+    html: '<p>Please enter the phrase that you just heard: <input name="input-codeblock" id="input-codeblock" pattern="^[a-z][a-z\s]*$" type="text" required /></p><p>The field will only accept input in the form of letters.</i> (e.g. \'phrase\').</p>'
 };
 // continue before showing the image
 var continue_block = {
@@ -220,6 +220,7 @@ var save_data_block = {
  * Create experiment timeline array
  **/
 var timeline = [];
+timeline.push(sound_check_input_block);
 timeline.push(instructions_block);
 timeline.push(sound_check_blocks[0]);
 // iterate over images
@@ -228,6 +229,7 @@ var sound_check_last_id = 0;  // counter of shown between blocks
 for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 	// check if the last image was reached
     if (i >= n_sound * n_sound_repeat) {
+        timeline.push(save_data_block);
         break;
     }
     // add sound check block
