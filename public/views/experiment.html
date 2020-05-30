@@ -167,7 +167,7 @@ console.log('sound_ids ', sound_ids);
 for (var i = 0; i < n_sound * n_sound_repeat; i++) {
     sound_stimuli.push({
         type: 'audio-keyboard-multiple-responses-release',
-	    stimulus: [sound_prefix + sound_ids[i] + '.mp3'],
+	    stimulus: [sound_prefix + sound_ids[i] + '.wav'],
 	    choices: ['F'],
 	    trial_ends_after_audio: true,
 	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when you feel that it becomes unsafe the cross.</p>',
