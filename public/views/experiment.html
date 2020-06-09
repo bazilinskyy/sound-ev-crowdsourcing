@@ -37,6 +37,7 @@ var n_sound_check = 4; // number of sounds to do sound check
 var n_sounds_per_block = 5; // numer of sounds to save data from
 var sound_prefix = 'sounds/sound_'; // prefix for videos
 var image_prefix = 'img/'; // prefix for images
+var SHOW_DEBUG = false; // switch for debugging output
 
  /**
  * Returns a random integer between min (inclusive) and max (inclusive).
@@ -86,6 +87,31 @@ function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
+/**
+ * Get parameter from URL.
+ */
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
+var debug = getUrlParameter('debug');
+if (!debug) {
+    debug = SHOW_DEBUG;
+}
+
+if (debug) {
+	console.log('debug', debug);
+}
+
 // Arrays for storing data
 var sound_ids = [];  // IDs of videos in stimuli
 var sound_check_ids = [];  // IDs of sounds to do sound check
@@ -114,7 +140,6 @@ sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 // define sound check block
 // generated at https://ttsmp3.com/ with British English Amy
 // text for 1st check from https://www.eslfast.com/supereasy/se/supereasy002.htm
-console.log('sound_check_ids ', sound_check_ids);
 // build array with blocks for sound check
 for (var i = 0; i < n_sound_check; i++) {
     if (i == 0) {
@@ -153,7 +178,6 @@ for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break; i++) {
     var id = getRandomInt(i * n_sound_break, (i + 1) * n_sound_break - 1);
     sound_check_locations.push(id);
 }
-console.log('sound_check_locations ', sound_check_locations);
 
 // populate arrays with sound IDs
 for (var i = 1; i <= n_sound; i++) {
@@ -162,7 +186,6 @@ for (var i = 1; i <= n_sound; i++) {
 	}
 }
 sound_ids = shuffle(sound_ids);  // shuffle IDs
-console.log('sound_ids ', sound_ids);
 // build array with audio stimuli
 for (var i = 0; i < n_sound * n_sound_repeat; i++) {
     sound_stimuli.push({
@@ -237,28 +260,39 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
         timeline.push(sound_check_instructions);
         timeline.push(sound_check_blocks[sound_check_last_id]);
         timeline.push(sound_check_input_block);
-        console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
+        if (debug) {
+	        console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
+	    }
     }
     timeline.push(continue_block);  // page with press C to continue
     timeline.push(start_holding_block);  // press F and hold
     timeline.push(sound_stimuli[i]);  // page with the stimulus
     timeline.push(slider_block);  // page with the sliders
-    console.log(i, sound_stimuli[i]);
+    if (debug) {
+	    console.log(i, sound_stimuli[i]);
+	}
     // save data
     if ((i + 1) % n_sounds_per_block == 0) {
         timeline.push(save_data_block);
     }
     // don't add the between block after the last trial
 	if ((i + 1) % n_sound_break == 0 && i != 0 && i != n_sound * n_sound_repeat - 1) {
-		console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
+		if (debug) {
+			console.log('added break', i, between_blocks[between_blocks_count], i % n_sound_break, i / n_sound_break);
+		}
 	    timeline.push(between_blocks[between_blocks_count]);
 	    between_blocks_count++;
 	}   
 }
 
-console.log(sound_stimuli);
-console.log(timeline);
-console.log(between_blocks);
+if (debug) {
+	console.log('sound_check_locations', sound_check_locations);
+	console.log('sound_check_ids', sound_check_ids);
+	console.log('sound_ids', sound_ids);
+	console.log('sound_stimuli', sound_stimuli);
+	console.log('timeline', timeline);
+	console.log('between_blocks', between_blocks);
+}
 
 /* Start the experiment */
 jsPsych.init({
