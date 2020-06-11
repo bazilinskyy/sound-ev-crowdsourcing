@@ -280,7 +280,6 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
         sound_check_last_id++; // increase counter of sound check black added
         timeline.push(sound_check_instructions);
         timeline.push(sound_check_blocks[sound_check_last_id]);
-        timeline.push(sound_check_input_block);
         if (debug) {
 	        console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
 	    }
