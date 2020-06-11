@@ -31,9 +31,9 @@
  * Constants.
  **/
 var n_sound = 12; // number of images
-var n_sound_repeat = 2; // number of repeats of each condition
+var n_sound_repeat = 3; // number of repeats of each condition
 var n_sound_break = 10; // number of images between each break
-var n_sound_check = 4; // number of sounds to do sound check
+var n_sound_check = 5; // number of sounds to do sound check
 var n_sounds_per_block = 5; // numer of sounds to save data from
 var sound_prefix = 'sounds/sound_'; // prefix for videos
 var image_prefix = 'img/'; // prefix for images
@@ -114,6 +114,8 @@ if (debug) {
 
 // Arrays for storing data
 var sound_ids = [];  // IDs of videos in stimuli
+var sound_ids_1 = [];  // IDs of videos in stimuli
+var sound_ids_2 = [];  // IDs of videos in stimuli
 var sound_check_ids = [];  // IDs of sounds to do sound check
 var sound_check_locations = [];  // Locations of sound check
 var between_blocks = []; // instructions between blocks
@@ -132,12 +134,12 @@ var sound_check_instructions = {
     choices: ['C']
 };
 // populate arrays with sound check IDs
-for (var i = 1; i <= n_sound_check; i++) {
+for (var i = 2; i <= n_sound_check; i++) {
     sound_check_ids.push(i);
 }
 // first ID is always the first long phrase
 // sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
-sound_check_ids = shuffle(sound_check_ids);  // shuffle IDs
+sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 // define sound check block
 // generated at https://ttsmp3.com/ with British English Amy
 // text for 1st check from https://www.eslfast.com/supereasy/se/supereasy002.htm
@@ -181,12 +183,29 @@ for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break; i++) {
 }
 
 // populate arrays with sound IDs
-for (var i = 1; i <= n_sound; i++) {
+// group 1
+for (var i = 1; i <= n_sound / 2; i++) {
 	for (var j = 1; j <= n_sound_repeat; j++) { 
-	    sound_ids.push(i);
+	    sound_ids_1.push(i);
 	}
 }
-sound_ids = shuffle(sound_ids);  // shuffle IDs
+// group 2
+for (var i = 7; i <= n_sound; i++) {
+    for (var j = 1; j <= n_sound_repeat; j++) { 
+        sound_ids_2.push(i);
+    }
+}
+// join sounds from 2 groups
+sound_ids_1 = shuffle(sound_ids_1);  // shuffle IDs for group 1
+sound_ids_2 = shuffle(sound_ids_2);  // shuffle IDs for group 2
+// randomise order of groups
+var group_choice = getRandomInt(1, 2);
+// join groups
+if (group_choice == 1) {
+    sound_ids = sound_ids_1.concat(sound_ids_2)
+} else {
+    sound_ids = sound_ids_2.concat(sound_ids_1)
+}
 // build array with audio stimuli
 for (var i = 0; i < n_sound * n_sound_repeat; i++) {
     sound_stimuli.push({
@@ -290,7 +309,8 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 if (debug) {
 	console.log('sound_check_locations', sound_check_locations);
 	console.log('sound_check_ids', sound_check_ids);
-	console.log('sound_ids', sound_ids);
+	console.log('group_choice', group_choice);
+    console.log('sound_ids', sound_ids);
 	console.log('sound_stimuli', sound_stimuli);
 	console.log('timeline', timeline);
 	console.log('between_blocks', between_blocks);
