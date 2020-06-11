@@ -170,7 +170,7 @@ var continue_block = {
 // black with image to be added before each video
 var start_holding_block = {
     type: 'html-keyboard-response',
-    stimulus: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when you feel that it becomes unsafe the cross.</p>',
+    stimulus: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when it becomes unsafe to cross; press again when safe to cross.</p>',
     choices: ['F']
 };
 // locations of sound check
@@ -194,7 +194,7 @@ for (var i = 0; i < n_sound * n_sound_repeat; i++) {
 	    stimulus: [sound_prefix + sound_ids[i] + '.wav'],
 	    choices: ['F'],
 	    trial_ends_after_audio: true,
-	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when you feel that it becomes unsafe the cross.</p>',
+	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when it becomes unsafe to cross; press again when safe to cross.</p>',
         on_finish: function(data) {
             jsPsych.data.addDataToLastTrial({
                 worker_code: finish_code
