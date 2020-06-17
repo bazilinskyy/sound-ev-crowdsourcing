@@ -158,7 +158,7 @@ for (var i = 0; i < n_sound_check; i++) {
         type: 'audio-keyboard-multiple-responses-release',
         stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
         choices: choices_key,
-        trial_ends_after_audio: true,
+        trial_ends_after_audio: trial_ends,
         prompt: stimulus_str
     });
 }
