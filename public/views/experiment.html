@@ -147,13 +147,15 @@ sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 for (var i = 0; i < n_sound_check; i++) {
     if (i == 0) {
         var stimulus_str = '<p>Listen carefully to the phrase. Adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment.</p>';
+       	var choices_key = ['C'];
     } else {
         var stimulus_str = '<p>Listen carefully to the phrase.</p>';
+        var choices_key = jsPsych.NO_KEYS;
     }
     sound_check_blocks.push({
         type: 'audio-keyboard-multiple-responses-release',
         stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
-        choices: jsPsych.NO_KEYS,
+        choices: choices_key,
         trial_ends_after_audio: true,
         prompt: stimulus_str
     });
