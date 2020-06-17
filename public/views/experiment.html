@@ -148,9 +148,11 @@ for (var i = 0; i < n_sound_check; i++) {
     if (i == 0) {
         var stimulus_str = '<p>Listen carefully to the phrase. Adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment. After adjusting your volume level, press \'C\' to proceed.</p>';
        	var choices_key = ['C'];
+       	var trial_ends = false;
     } else {
         var stimulus_str = '<p>Listen carefully to the phrase.</p>';
         var choices_key = jsPsych.NO_KEYS;
+        var trial_ends = true;
     }
     sound_check_blocks.push({
         type: 'audio-keyboard-multiple-responses-release',
