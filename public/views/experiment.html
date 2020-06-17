@@ -10,6 +10,7 @@
     <script src='jsPsych/plugins/jspsych-survey-html-form.js'></script>
     <script src='jsPsych/plugins/jspsych-survey-html-form-slider.js'></script>
     <script src='jsPsych/plugins/jspsych-audio-keyboard-multiple-responses-release.js'></script>
+    <script src='jsPsych/plugins/jspsych-audio-keyboard-response.js'></script>
     <link href='jsPsych/css/jspsych.css' rel='stylesheet' type='text/css'></link>
     <link href='css/experiment.css' rel='stylesheet' type='text/css'></link>
     <link rel='icon' type='image/png' href='/img/favicon.png' />
@@ -155,7 +156,7 @@ for (var i = 0; i < n_sound_check; i++) {
         var trial_ends = true;
     }
     sound_check_blocks.push({
-        type: 'audio-keyboard-multiple-responses-release',
+        type: 'audio-keyboard-response',
         stimulus: [sound_prefix + 'test_' + sound_check_ids[i] + '.mp3'],
         choices: choices_key,
         trial_ends_after_audio: trial_ends,
