@@ -131,7 +131,7 @@ var instructions_block = {
 // page with instructions for the sound check during blocks
 var sound_check_instructions = {
     type: 'html-keyboard-response',
-    stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will locad automatically. Press \'C\' to proceed.</p>',
+    stimulus: '<p>On the next page, you will listen to a phrase spoken in English. Listen to it carefully. After the end of the phrase, a new page will load automatically. Press \'C\' to proceed.</p>',
     choices: ['C']
 };
 // populate arrays with sound check IDs
@@ -147,7 +147,7 @@ sound_check_ids = [1].concat(shuffle(sound_check_ids));  // shuffle IDs
 // build array with blocks for sound check
 for (var i = 0; i < n_sound_check; i++) {
     if (i == 0) {
-        var stimulus_str = '<p>Listen carefully to the phrase. Adjust your volume level to be able to  hear the phrase clearly. Do NOT change your volume level till the end of the experiment. After adjusting your volume level, press \'C\' to proceed.</p>';
+        var stimulus_str = '<p>Listen carefully to song. Adjust your volume level to be able to  hear the song clearly. Do NOT change your volume level till the end of the experiment. After adjusting your volume level, press \'C\' to proceed.</p>';
        	var choices_key = ['C'];
        	var trial_ends = false;
     } else {
