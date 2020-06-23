@@ -181,7 +181,7 @@ var start_holding_block = {
     choices: ['F']
 };
 // locations of sound check
-for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break; i++) {
+for (var i = 0; i < n_sound * n_sound_repeat / n_sound_break - 1; i++) {
     // pick location within the block
     var id = getRandomInt(i * n_sound_break, (i + 1) * n_sound_break - 1);
     sound_check_locations.push(id);
