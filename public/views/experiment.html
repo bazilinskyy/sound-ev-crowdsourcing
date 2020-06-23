@@ -288,7 +288,7 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
         timeline.push(sound_check_instructions);
         timeline.push(sound_check_blocks[sound_check_last_id]);
         if (debug) {
-	        console.log('added sounds check', sound_check_last_id, sound_check_blocks[sound_check_last_id]);
+	        console.log('added sound check', i, sound_check_last_id, sound_check_blocks[sound_check_last_id]);
 	    }
     }
     timeline.push(continue_block);  // page with press C to continue
