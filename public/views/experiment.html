@@ -270,12 +270,12 @@ var save_data_block = {
 var timeline = [];
 timeline.push(instructions_block);
 timeline.push(sound_check_blocks[0]);  // song for adjusting volume
-timeline.push(sound_check_instructions);  // 1st textual check as an example
-timeline.push(sound_check_blocks[1]);
-timeline.push(sound_check_input_block);
+// timeline.push(sound_check_instructions);  // 1st textual check as an example
+// timeline.push(sound_check_blocks[1]);
+// timeline.push(sound_check_input_block);
 // iterate over images
 var between_blocks_count = 0;  // counter of shown between blocks
-var sound_check_last_id = 1;  // counter of shown between blocks
+var sound_check_last_id = 0;  // counter of shown between blocks
 for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 	// check if the last image was reached
     if (i >= n_sound * n_sound_repeat) {
