@@ -11,24 +11,33 @@ Code for analysis is written in MATLAB. No configuration is needed. The project 
 ### Visualisation
 Figures are saved in `sound-ev-crowdsourcing/_output`.
 
-<!-- ![median willingness to cross](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/median-cross.jpg?raw=true)
-Mediam willingness to cross.
+![keypresses in crowdsourced study](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online-noise.jpg?raw=true)
+Keypresses in crowdsourced experiment.
 
-![sd willingness to cross](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/sd-cross.jpg?raw=true)
-Mediam willingness to cross.
+![keypresses in crowdsourced study with effect of background noise](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online-noise.jpg?raw=true)
+Keypresses in crowdsourced experiment with effect of background noise.
 
-![median willingness to cross for usa and ven](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/median-cross-usa-ven.jpg?raw=true)
-Median willingness to cross for participants from USA and Venezuela.
+![scatter plot of annoyance and keypress data](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/scatter-annoyance-keypress.jpg?raw=true)
+Scatter plot of annoyance and keypress data.
 
-![response willingness to cross for usa and ven](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/response-time-usa-ven.jpg?raw=true)
-Response time for participants from USA and Venezuela. -->
+![scatter plot of noteceability and annoyance](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/scatter-notice-annoyance.jpg?raw=true)
+Scatter plot of annoyance and keypress data.
+
+![scatter plot of noteceability and information](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/scatter-notice-information.jpg?raw=true)
+Scatter plot of annoyance and showing enough information data.
+
+![scatter plot of volume and annoyance](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/scatter-notice-information.jpg?raw=true)
+Scatter plot of volume and annoyance.
 
 ### Configuration of analysis
 Configuration of analysis needs to be defined in `sound-ev-crowdsourcing/config`. Please use the `default.config` file for the required structure of the file. If no custom config file is provided, `default.config` is used. The config file has the following parameters:
-* `file_heroku`: files with data from heroku.
-* `file_appen`: file with data from appen.
-* `appen_range`: range of data in `file_appen`.
-* `path_stimuli`: path with stimuli.
+* `files_heroku`: files with data from heroku from the crowdsourced experiment.
+* `file_appen`: file with data from appen from the crowdsourced experiment.
+* `data_file`: mat file with data from the crowdsourced experiment.
+* `files_heroku_lab`: files with data from heroku from the controlled experiment.
+* `file_appen_lab`: file with data from appen from the controlled experiment.
+* `data_file_lab`: mat file with data from the controlled experiment.
+* `estimated_annoyance`: mat file data of estimated annoyance.
 * `mapping`: csv file with mapping of stimuli.
-* `path_figures`: path for outputting figures in the EPS format.
-* `path_figures_readme`: path for outputting figures in the JPG format.
+* `path_output`: path for outputting figures in the EPS format.
+* `path_figures`: path for outputting figures in the JPG format.

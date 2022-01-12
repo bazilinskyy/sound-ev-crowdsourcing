@@ -1,4 +1,5 @@
-% Matlab script built by Pavlo Bazilinksyy and Roberto Merino <p.bazilinskyy@tudelft.nl>
+% Matlab script built by Pavlo Bazilinksyy, Roberto Merino and
+% Joost de Winter <p.bazilinskyy@tudelft.nl>
 clear all;close all;clc; %#ok<*CLALL>
 
 %% ************************************************************************
@@ -11,6 +12,7 @@ SHOW_OUTPUT = true;         % flag for figures and console output
 FIGURE_OUTPUT = 'figures';  % path for the output of figures
 CLOSE_AFTER_SAVING = false;  % close all figures afterexporting
 
+% volume data (mean in 4-8 s interval, max in 4-8 s interval, perceive louadness)
 Vol=[   0.0328606932453326          0.33331298828125          30.0332480411388
         0.073496973751555          0.33331298828125          22.2423957973793
         0.0581930806908868         0.333343505859375          23.3432334334153
@@ -40,7 +42,8 @@ Vol=[   0.0328606932453326          0.33331298828125          30.0332480411388
          0.255271672749738         0.999969482421875           36.672026575302
          0.253611372631971                         1          42.1715864649137
          0.252922212811759         0.999969482421875           42.751937553847
-         0.249879121838513         0.999969482421875          49.1960773970861]; % volume data (mean in 4-8 s interval, max in 4-8 s interval, perceive louadness)
+         0.249879121838513         0.999969482421875          49.1960773970861];
+
 %% Import data
 [numbers, sound_info, everything]  = xlsread(config.mapping,'A2:D31');    % Import Excel file with FigureEight data (crowd study)
 load(config.estimated_annoyance);  % Load values for estimated annoyance from the model
@@ -309,7 +312,6 @@ if SHOW_OUTPUT
     hold on;
     grid on;
     box on
-    %     title('Background noise - online')
     V1 = 100 * squeeze(nanmean(nanmean(key_pressesf_combined(:,v1,:),2),1)); % Background noise
     V2 = 100 * squeeze(nanmean(nanmean(key_pressesf_combined(:,v2,:),2),1)); % No background noise
     v1p=100 * nanmean(nanmean(key_pressesf_combined(:,v1,:),3),2);
@@ -340,17 +342,7 @@ if SHOW_OUTPUT
     export_figure(gcf, [config.path_output filesep 'keypress-online-noise'], 'epsc')
     export_figure(gcf, [config.path_figures filesep 'keypress-online-noise'], 'jpg')
     
-    %% Bar plot for slider questions - online
-    % data = nanmean(slider_q(:,:,1));
-    % legend('This vehicle sound was easy to notice (0=not easy to notice, 10=easy to notice)', ...
-    %      'This sound gave me enough information to realise that a vehicle was approaching (0=not enough information, 10=enough information)', ...
-    %       'This vehicle sound was annoying (0=not annoying, 10=extremely annoying)', ...
-    %        'NumColumns', 1, ...
-    %         'location', 'northwest');
-    
-    %%
-    close all
-    
+    %% Correlations
     X=[100-nanmean(stats_pp,2) squeeze(nanmean(slider_q_combined)) Vol];
     disp(corr(X))
 
@@ -369,6 +361,9 @@ if SHOW_OUTPUT
     axis square
     xlabel('Volume','fontsize',20)
     ylabel('Annoying (0-10)','fontsize',20)
+    % maximise and export as eps and jpg
+    export_figure(gcf, [config.path_output filesep 'scatter-volume-annoyance'], 'epsc')
+    export_figure(gcf, [config.path_figures filesep 'scatter-volume-annoyance'], 'jpg')
 
     %% Easy to notice/enough information
     figure
@@ -385,7 +380,11 @@ if SHOW_OUTPUT
     axis square
     xlabel('Easy to notice (0-10)','fontsize',20)
     ylabel('Gave enough information (0-10)','fontsize',20)
+    % maximise and export as eps and jpg
+    export_figure(gcf, [config.path_output filesep 'scatter-notice-information'], 'epsc')
+    export_figure(gcf, [config.path_figures filesep 'scatter-notice-information'], 'jpg')
     
+    %% Easy to notice/annoyance
     figure
     for i=1:30
         if i<=15
@@ -400,8 +399,11 @@ if SHOW_OUTPUT
     axis square
     xlabel('Easy to notice (0-10)','fontsize',20)
     ylabel('Annoying (0-10)','fontsize',20)
+    % maximise and export as eps and jpg
+    export_figure(gcf, [config.path_output filesep 'scatter-notice-annoyance'], 'epsc')
+    export_figure(gcf, [config.path_figures filesep 'scatter-notice-annoyance'], 'jpg')
     
-    
+    %% Annoyance/keypresses
     figure
     for i=1:30
         if i<=15
@@ -416,7 +418,9 @@ if SHOW_OUTPUT
     axis square
     xlabel('Annoying (0-10)','fontsize',20)
     ylabel('Button-press performance (%)','fontsize',20)
-    
+    % maximise and export as eps and jpg
+    export_figure(gcf, [config.path_output filesep 'scatter-annoyance-keypress'], 'epsc')
+    export_figure(gcf, [config.path_figures filesep 'scatter-annoyance-keypress'], 'jpg')
 end
 
 
