@@ -1,3 +1,11 @@
 **/.DS_Store
 *.sublime-project
 *.sublime-workspace
+
+# Data files
+soundev/*.csv
+soundev/*.xls
+soundev/*.xlsx
+soundev/*.json
+soundev/*.asv
+soundev/*.mat
