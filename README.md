@@ -11,7 +11,7 @@ Code for analysis is written in MATLAB. No configuration is needed. The project 
 ### Visualisation
 Figures are saved in `sound-ev-crowdsourcing/_output`.
 
-![keypresses in crowdsourced study](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online-noise.jpg?raw=true)
+![keypresses in crowdsourced study](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online.jpg?raw=true)
 Keypresses in crowdsourced experiment.
 
 ![keypresses in crowdsourced study with effect of background noise](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online-noise.jpg?raw=true)
