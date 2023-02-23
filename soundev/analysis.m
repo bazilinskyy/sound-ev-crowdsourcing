@@ -358,7 +358,9 @@ if SHOW_OUTPUT
     legend(l,legend_text,'autoupdate','off');
     a = fill([4; 8; 8; 4],[-100; -100; 200; 200],[250/255 250/255 250/255]);
     uistack(a,'bottom');
-    Ax = gca;Ax.YGrid = 'on';Ax.Layer = 'top';
+    Ax = gca;
+    Ax.YGrid = 'on';
+    Ax.Layer = 'top';
     set(gca, ...
         'LooseInset', [0.01 0.01 0.01 0.01], ...
         'xlim', [0 13.6], ...
