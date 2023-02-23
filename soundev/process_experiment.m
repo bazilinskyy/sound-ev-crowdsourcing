@@ -1,16 +1,16 @@
 % Matlab script by Pavlo Bazilinskyy and Joost de Winter
-% questions/comments to <pavlo.bazilinskyy@gmail.com>
+% questions/comments to <pavlo.bazilinskyy@tue.nl>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Process appen and heroku data for the experiment. The function needs
-% to be somewhat customised for each individual stufy. The working
+% to be somewhat customised for each individual study. The working
 % principle is however translatable across studies. Output should be
 % customised to cater for all questions and types of data collected in the
-% particiular study.
+% particular study.
 %
 %%% Naming convention:
 % PP: participant
-% appen: platform used to reccruit participants and ask survey questions
+% appen: platform used to recruit participants and ask survey questions
 %        (https://appen.com)
 % heroku: platform used to run the experiment and store data
 %         (https://www.heroku.com)
@@ -27,7 +27,7 @@
 % load_mat_file: bool flag for loading mat file. If true, no analysis will
 %                be done and the file with data will be loaded instead
 % appen_file: csv file with appen data
-% appen_indices: indeces in appen data
+% appen_indices: indices in appen data
 % heroku_files: list of files with heroku data
 % prefix_stimuli: prefix of saved location of stimuli
 %                 (e.g., image/video/audio)
@@ -39,7 +39,7 @@
 % X: demographics and other numeric data for participants
 % Country: countries of participants
 % RT: reaction times/times of keypresses (legacy name 'reaction time')
-% RP: data from slider/choise question (legecy name 'reaction press')
+% RP: data from slider/choice question (legacy name 'reaction press')
 % StimuliIDs: IDs of stimuli as shown to participants
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [X, ...
@@ -72,8 +72,8 @@ function [X, ...
         % process multiple files with heroku data
         raw_heroku = [];  % for storing all heroku data
         for i=1:size(heroku_files, 1)
-            filename = heroku_files(i,:);
-            % import Excel file with leypress data
+            filename = heroku_files{i,:};
+            % import Excel file with keypress data
             [~,~,raw_1_file] = xlsread(filename);
             % check if big matrix with heroku data or matrix from current
             % file has more columns
@@ -99,7 +99,7 @@ function [X, ...
         disp([datestr(now, 'HH:MM:SS.FFF') ' - End of importing data']);
         %% Process appen data
         disp([datestr(now, 'HH:MM:SS.FFF') ' - Start of processing appen data']);
-        % allocate matrix to store numers answers to survey quetsions, worker
+        % allocate matrix to store numbers answers to survey questions, worker
         % ID and additional data/flags
         X=NaN(size(raw_appen,1),25);
         X(:,23)=0;  % set counter of mistakes in test phrases to 0
@@ -243,7 +243,7 @@ function [X, ...
         % IDs of stimuli shown
         StimulusIDs = NaN(size(raw_appen,1), num_stimuli);
         % flags for blocks that were found. displaying the sate of this matrix
-        % in the end of the functioncan be used to debug if all data was parsed
+        % in the end of the function can be used to debug if all data was parsed
         % successfully
         found_values = zeros(size(raw_appen,1), num_stimuli/num_stimuli_block);
         % count people that added the same worker_code more than once
@@ -311,7 +311,7 @@ function [X, ...
                 code_regex = regexp(cell_row, 'rts:[','match');
                 if size(code_regex,1) > 0 % start of rt values
                     rts_detected = true;  % flag to start recording RTs from stimulus
-                    counter_rt = 0;  % recet countrer of RTs for stimulus
+                    counter_rt = 0;  % reset counter of RTs for stimulus
                     % no continue, as an rt value can follow in the cell
                 end
                 % keypress time
@@ -466,7 +466,7 @@ function [X, ...
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             % Add data to corresponding row in X
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-            % find occurances of the same worker_code in appen data
+            % find occurrences of the same worker_code in appen data
             row_appen_matched=find(strcmp(heroku_code, ...
                 raw_appen(:,appen_indices(20))));
             if ~isempty(row_appen_matched)
@@ -482,7 +482,7 @@ function [X, ...
                         counter_cheaters = counter_cheaters + 1;
                     end
                 end
-                % for storind data, use only 1st occurance of worker_id in
+                % for storing data, use only 1st occurrence of worker_id in
                 % appen data
                 row_appen_matched=row_appen_matched(1);
                 % check values from which block to add
@@ -504,7 +504,7 @@ function [X, ...
                     % find last processed block
                     last_block = find(found_values(row_appen_matched,:), ...
                         1, ...  % if 1, it was already processed
-                        'last');  % get only last occurance of 1
+                        'last');  % get only last occurrence of 1
                     % new block is last block + 1
                     block_id = last_block + 1;
                     % check if block_id is within allowed range
@@ -520,7 +520,7 @@ function [X, ...
                 % allowed number of stimuli is stored in a row in heroku.
                 % it is rare but possible
                 if (counter_stimuli_id < num_stimuli_block || counter_stimuli_id > num_stimuli_block)
-                    % unexpected number of datapoints found
+                    % unexpected number of data points found
                     disp([datestr(now, 'HH:MM:SS.FFF') ...
                         ' - WARNING: ' ...
                         num2str(counter_stimuli_id) ...
@@ -537,7 +537,7 @@ function [X, ...
                         % more values than limit
                         values_to_save = num_stimuli_block;
                     end
-                else  % expected number of datapoints found
+                else  % expected number of data points found
                     values_to_save = counter_stimuli_id;
                 end
                 % index of 1st value
@@ -665,7 +665,6 @@ function [X, ...
         end
         invalid9 = unique([excluded_total_mean; indeces_exclude]);
         
-        
         %%% Remove filtered out data
         % add together all invalid rows with data
         invalid = unique([invalid1; ...
@@ -713,7 +712,7 @@ function [X, ...
         disp([datestr(now, 'HH:MM:SS.FFF') ' - Loaded mat file ' name_mat_file]);
     end
     %% Output with statistics and filtering information
-    disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents who inputed the same code multiple times (cheaters) = ' num2str(counter_cheaters)])
+    disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents who inputted the same code multiple times (cheaters) = ' num2str(counter_cheaters)])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents who did not read instructions = ' num2str(length(invalid1))])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents under 18 = ' num2str(length(invalid2))])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents that took less than 300 s = ' num2str(length(invalid3))])
@@ -724,14 +723,14 @@ function [X, ...
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of responses who made mistakes with test phrases = ' num2str(length(invalid8))]);
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents that provided outliers = ' num2str(length(invalid9))]);
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents removed = ' num2str(length(invalid))]);
-    disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents included in the analysis =  ' num2str(size(X,1))]);
+    disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of respondents included in the analysis = ' num2str(size(X,1))]);
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Number of countries included in the analysis =  ' num2str(length(unique(Country)))]);
     %% Gender, age
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Gender, male respondents = ' num2str(sum(X(:,2)==2))])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Gender, female respondents = ' num2str(sum(X(:,2)==1))])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Gender, I prefer not to respond = ' num2str(sum(isnan(X(:,2))))])
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Age, mean = ' num2str(nanmean(X(:,3)))])
-    disp([datestr(now, 'HH:MM:SS.FFF') ' - Age, sd = ' num2str(nanstd(X(:,3)))])
+    disp([datestr(now, 'HH:MM:SS.FFF') ' - Age, SD = ' num2str(nanstd(X(:,3)))])
     %% Survey time
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Survey time mean (minutes) after filtering = ' num2str(nanmean(X(:,18)/60))]);
     disp([datestr(now, 'HH:MM:SS.FFF') ' - Survey time median (minutes) after filtering = ' num2str(nanmedian(X(:,18)/60))]);
