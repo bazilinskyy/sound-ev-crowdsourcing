@@ -31,9 +31,6 @@ Key press percentage as a function of elapsed time for two selected samples.
 ![keypresses in crowdsourced study](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online.jpg?raw=true)
 Keypresses in crowdsourced experiment.
 
-![keypresses in crowdsourced study](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online.jpg?raw=true)
-Keypresses in crowdsourced experiment.
-
 ![keypresses in crowdsourced study with effect of background noise](https://github.com/bazilinskyy/sound-ev-crowdsourcing/blob/main/figures/keypress-online-noise.jpg?raw=true)
 Keypresses in crowdsourced experiment with effect of background noise.
 
