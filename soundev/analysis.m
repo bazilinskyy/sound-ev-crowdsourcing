@@ -7,46 +7,49 @@ clear all;close all;clc; %#ok<*CLALL>
 %% ************************************************************************
 config = jsondecode(fileread('../config'));
 
+%% ************************************************************************
 %% Consts
+%% ************************************************************************
 SHOW_OUTPUT = true;         % flag for figures and console output
 FIGURE_OUTPUT = 'figures';  % path for the output of figures
 CLOSE_AFTER_SAVING = false;  % close all figures after exporting
 % volume data (mean in 4-8 s interval, max in 4-8 s interval, perceive loudness)
-Vol=[   0.0328606932453326         0.33331298828125           30.0332480411388
-        0.073496973751555          0.33331298828125           22.2423957973793
-        0.0581930806908868         0.333343505859375          23.3432334334153
-        0.0544878021627238         0.333343505859375          24.6335053263284
-        0.0546693753601746         0.333343505859375          28.8122725087942
-        0.0182522736823146          0.33331298828125          26.6773224314811
-        0.0432766372284751          0.33331298828125            22.30932152563
-        0.0439408049547024          0.33331298828125          27.1181018226818
-        0.0438228923791487          0.33331298828125          28.7723505342991
-        0.0432652310888083          0.33331298828125          32.6544445880941
-        0.0448908731916202          0.32928466796875          33.5386231478166
-        0.0813485820484228          0.33331298828125          22.6643904765983
-        0.0776686324475091          0.33331298828125          26.7451922048525
-        0.0744605158380378          0.33331298828125          28.4860377320983
-        0.0712633351510727          0.33331298828125          32.6791813414875
-        0.0761190702010706                         1          39.0160541977957
-         0.225863964900771                         1          35.1186483548727
-           0.1848174732063         0.999969482421875          36.0475428958101
-         0.171850024860129         0.999969482421875          35.1625755735403
-         0.174002699262407         0.999969482421875          40.7319438245245
-        0.0507447114624049         0.999969482421875          46.6699798164081
-         0.126775164931835         0.999969482421875          30.1179458893278
-         0.127358701141095                         1          35.2678883795507
-         0.126850673192366         0.999969482421875          35.5967570270217
-         0.125287907324179         0.999969482421875          41.2889254251968
-        0.0496197364548449         0.474761962890625          37.3082611557063
-         0.255271672749738         0.999969482421875           36.672026575302
-         0.253611372631971                         1          42.1715864649137
-         0.252922212811759         0.999969482421875           42.751937553847
-         0.249879121838513         0.999969482421875          49.1960773970861];
+Vol = [0.0328606932453326  0.33331298828125   30.0332480411388
+       0.073496973751555   0.33331298828125   22.2423957973793
+       0.0581930806908868  0.333343505859375  23.3432334334153
+       0.0544878021627238  0.333343505859375  24.6335053263284
+       0.0546693753601746  0.333343505859375  28.8122725087942
+       0.0182522736823146  0.33331298828125   26.6773224314811
+       0.0432766372284751  0.33331298828125   22.30932152563
+       0.0439408049547024  0.33331298828125   27.1181018226818
+       0.0438228923791487  0.33331298828125   28.7723505342991
+       0.0432652310888083  0.33331298828125   32.6544445880941
+       0.0448908731916202  0.32928466796875   33.5386231478166
+       0.0813485820484228  0.33331298828125   22.6643904765983
+       0.0776686324475091  0.33331298828125   26.7451922048525
+       0.0744605158380378  0.33331298828125   28.4860377320983
+       0.0712633351510727  0.33331298828125   32.6791813414875
+       0.0761190702010706  1                  39.0160541977957
+       0.225863964900771   1                  35.1186483548727
+       0.1848174732063     0.999969482421875  36.0475428958101
+       0.171850024860129   0.999969482421875  35.1625755735403
+       0.174002699262407   0.999969482421875  40.7319438245245
+       0.0507447114624049  0.999969482421875  46.6699798164081
+       0.126775164931835   0.999969482421875  30.1179458893278
+       0.127358701141095   1                  35.2678883795507
+       0.126850673192366   0.999969482421875  35.5967570270217
+       0.125287907324179   0.999969482421875  41.2889254251968
+       0.0496197364548449  0.474761962890625  37.3082611557063
+       0.255271672749738   0.999969482421875  36.672026575302
+       0.253611372631971   1                  42.1715864649137
+       0.252922212811759   0.999969482421875  42.751937553847
+       0.249879121838513   0.999969482421875  49.1960773970861];
 
+%% ************************************************************************
 %% Import data
-% Import Excel file with FigureEight data (crowdsourced study)
+%% ************************************************************************
+% Import mapping with information about stimuli
 [numbers, sound_info, everything]  = xlsread(config.mapping, 'A2:D31');
-
 %% Process appen and heroku data from experiment
 % indices to traverse in appen data
 appen_indices = [17,... % 1. Instructions understood
@@ -80,12 +83,12 @@ Country, ...
 RT, ...
 Keys, ...
 Sliders, ...
-SoundIDs] = process_experiment(1, ...                 % ID of experiment
-                               false, ...             % flag for saving data as mat file
-                               true, ...              % flag for loading data as mat file
-                               config.data_file, ...  % file with saved data
-                               config.file_appen, ... % file with appen data
-                               appen_indices, ...     % indeces in appen data
+SoundIDs] = process_experiment(1, ...                    % ID of experiment
+                               false, ...                % flag for saving data as mat file
+                               true, ...                 % flag for loading data as mat file
+                               config.data_file, ...     % file with saved data
+                               config.file_appen, ...    % file with appen data
+                               appen_indices, ...        % indices in appen data
                                config.files_heroku, ...  % files with heroku data
                                'sounds/sound_', ...      % prefix for sound stimuli
                                number_stimuli * repetition, ...     % number of stimuli
@@ -97,51 +100,58 @@ Country_lab, ...
 RT_lab, ...
 Keys_lab, ...
 Sliders_lab, ...
-SoundIDs_lab] = process_experiment(2, ...                 % ID of experiment
-                                   false, ...             % flag for saving data as mat file
-                                   true, ...              % flag for loading data as mat file
-                                   config.data_file_lab, ...    % file with saved data
-                                   config.file_appen_lab, ...   % file with appen data
-                                   appen_indices, ...     % indeces in appen data
+SoundIDs_lab] = process_experiment(2, ...                        % ID of experiment
+                                   false, ...                    % flag for saving data as mat file
+                                   true, ...                     % flag for loading data as mat file
+                                   config.data_file_lab, ...     % file with saved data
+                                   config.file_appen_lab, ...    % file with appen data
+                                   appen_indices, ...            % indices in appen data
                                    config.files_heroku_lab, ...  % files with heroku data
-                                   'sounds/sound_', ...   % prefix for sound stimuli
-                                   number_stimuli * repetition, ...     % number of stimuli
-                                   5, ...                 % number of stimuli per block
-                                   'R7\d+\s?CM\d+\s?8J'); % regex pattern for worker_code
+                                   'sounds/sound_', ...          % prefix for sound stimuli
+                                   number_stimuli * repetition, ...  % number of stimuli
+                                   5, ...                        % number of stimuli per block
+                                   'R7\d+\s?CM\d+\s?8J');        % regex pattern for worker_code
 
 %% ************************************************************************
 %% Postprocessing of raw data
 %% ************************************************************************
 
 %% Transform key_presses to key_pressesf0, containing the key press data in 0.1-s increments
-key_pressesf = NaN(size(RT,1),number_stimuli,200);
-NumberofSoundsPlayed = NaN(size(RT,1),number_stimuli);
+key_pressesf = NaN(size(RT, 1), number_stimuli, 200);
+NumberofSoundsPlayed = NaN(size(RT, 1), number_stimuli);
 for i = 1:size(RT, 1) % loop over participants
     for j = 1:size(RT, 2) % loop over stimuli
-        if SoundIDs(i,j)>=1  % fix for checking video_id
-            temp = squeeze(RT(i,j,:))/(1000);
+        % fix for checking video_id
+        if SoundIDs(i,j)>=1
+            temp = squeeze(RT(i, j, :))/(1000);
             temp(isnan(temp)) = [];
-            if max(temp)>15 % if there is more than 15 seconds of data, then the trial must be invalid
-                temp=[];
+            % if there is more than 15 seconds of data, then the trial must be invalid
+            if max(temp) > 15
+                temp = [];
             end
-            if length(temp)>=2 % fill data gap for first half a second (0.5 s) of holding the key
-                if (temp(2)-temp(1)>0.475 && temp(2)-temp(1)<0.525) % if 'exactly' 0.5 seconds between the first and second press
-                    temp=[temp(1);transpose(temp(1)+0.04:0.04:temp(2));temp(2:end)]; % fill with button press data
-                elseif temp(1) > 0.475 && temp(1) < 0.525 % if the first button press is 'exactly' at 0.5 seconds
-                    temp=[transpose(0.04:0.04:temp(1));temp(2:end)];
+            % fill data gap for first half a second (0.5 s) of holding the key
+            if length(temp) >= 2
+                % if 'exactly' 0.5 seconds between the first and second press
+                if (temp(2) - temp(1) > 0.475 && temp(2) - temp(1) < 0.525)
+                    % fill with button press data
+                    temp = [temp(1); transpose(temp(1) + 0.04:0.04:temp(2)); temp(2:end)];
+                % if the first button press is 'exactly' at 0.5 seconds
+                elseif temp(1) > 0.475 && temp(1) < 0.525
+                    temp =[transpose(0.04:0.04:temp(1)); temp(2:end)];
                 end
             end
-            O = 10 * unique(round(temp,1));  % indices where button is pressed (in 0.1-second increments)
-            if isnan(key_pressesf(i,SoundIDs(i,j),1))
-                key_pressesf(i,SoundIDs(i,j),:) = 0;
-                O(O==0) = [];
-                key_pressesf(i,SoundIDs(i,j),O) = key_pressesf(i,SoundIDs(i,j),O) + 1;
-                NumberofSoundsPlayed(i,SoundIDs(i,j))=1;
+            % indices where button is pressed (in 0.1-second increments)
+            O = 10 * unique(round(temp, 1));
+            if isnan(key_pressesf(i,SoundIDs(i, j), 1))
+                key_pressesf(i,SoundIDs(i, j),:) = 0;
+                O(O == 0) = [];
+                key_pressesf(i,SoundIDs(i, j), O) = key_pressesf(i, SoundIDs(i, j), O) + 1;
+                NumberofSoundsPlayed(i, SoundIDs(i, j)) = 1;
             else
                 O(O==0) = [];
-                key_pressesf(i,SoundIDs(i,j),O) = key_pressesf(i,SoundIDs(i,j),O) + 1;
+                key_pressesf(i,SoundIDs(i, j),O) = key_pressesf(i, SoundIDs(i, j), O) + 1;
                 % cater for 2+ repetitions
-                NumberofSoundsPlayed(i,SoundIDs(i,j)) = NumberofSoundsPlayed(i,SoundIDs(i,j)) + 1;
+                NumberofSoundsPlayed(i,SoundIDs(i, j)) = NumberofSoundsPlayed(i,SoundIDs(i, j)) + 1;
             end
         end
     end
@@ -149,17 +159,17 @@ end
 % divide key presses by the number of times the video was played
 for i = 1:size(RT, 1) % loop over participants
     for j = 1:number_stimuli % loop over stimuli
-        key_pressesf(i,j,:)=key_pressesf(i,j,:)./NumberofSoundsPlayed(i,j);
+        key_pressesf(i, j, :)=key_pressesf(i, j, :)./NumberofSoundsPlayed(i, j);
     end
 end
 %% Slider question data
-slider_q = NaN(size(Sliders,1),number_stimuli,size(Sliders,3));
-for question=1:3
-    questiondata=squeeze(Sliders(:,:,question));
-    for i=1:size(Sliders, 1)
-        for i2=1:number_stimuli
-            indexes=find(SoundIDs(i,:)==i2);
-            slider_q(i,i2,question)=mean(questiondata(i,indexes),'omitnan');
+slider_q = NaN(size(Sliders,1), number_stimuli, size(Sliders, 3));
+for question = 1:3
+    questiondata = squeeze(Sliders(:, :, question));
+    for i = 1:size(Sliders, 1)
+        for i2 = 1:number_stimuli
+            indexes = find(SoundIDs(i, :) == i2);
+            slider_q(i,i2,question) = mean(questiondata(i, indexes),'omitnan');
         end
     end
 end
@@ -173,20 +183,27 @@ key_pressesf_lab = NaN(size(RT_lab,1),number_stimuli,200);
 NumberofSoundsPlayed_lab = NaN(size(RT_lab,1),number_stimuli);
 for i = 1:size(RT_lab, 1) % loop over participants
     for j = 1:size(RT_lab, 2) % loop over stimuli
-        if SoundIDs_lab(i,j)>=1  % fix for checking video_id (different than older studies)
+        % fix for checking video_id (different than older studies)
+        if SoundIDs_lab(i,j)>=1
             temp = squeeze(RT_lab(i,j,:))/(1000);
             temp(isnan(temp)) = [];
-            if max(temp)>15 % if there is more than 15 seconds of data, then the trial must be invalid.
+            % if there is more than 15 seconds of data, then the trial must be invalid.
+            if max(temp) > 15
                 temp=[];
             end
-            if length(temp)>=2 % fill data gap for first half a second (0.5 s) of holding the key
-                if (temp(2)-temp(1)>0.475 && temp(2)-temp(1)<0.525) % if 'exactly' 0.5 seconds between the first and second press
-                    temp=[temp(1);transpose(temp(1)+0.04:0.04:temp(2));temp(2:end)]; % fill with button press data
-                elseif temp(1) > 0.475 && temp(1) < 0.525 % if the first button press is 'exactly' at 0.5 seconds
-                    temp=[transpose(0.04:0.04:temp(1));temp(2:end)];
+            % fill data gap for first half a second (0.5 s) of holding the key
+            if length(temp)>=2
+                % if 'exactly' 0.5 seconds between the first and second press
+                if (temp(2) - temp(1)>0.475 && temp(2) - temp(1)<0.525)
+                    % fill with button press data
+                    temp = [temp(1); transpose(temp(1) + 0.04:0.04:temp(2)); temp(2:end)];
+                % if the first button press is 'exactly' at 0.5 seconds
+                elseif temp(1) > 0.475 && temp(1) < 0.525
+                    temp = [transpose(0.04:0.04:temp(1)); temp(2:end)];
                 end
             end
-            O = 10 * unique(round(temp,1));  % indices where button is pressed (in 0.1-second increments)
+            % indices where button is pressed (in 0.1-second increments)
+            O = 10 * unique(round(temp,1));
             if isnan(key_pressesf_lab(i,SoundIDs_lab(i,j),1))
                 key_pressesf_lab(i,SoundIDs_lab(i,j),:) = 0;
                 O(O==0) = [];
@@ -204,18 +221,18 @@ end
 % Divide key presses by the number of times the video was played
 for i = 1:size(RT_lab, 1) % loop over participants
     for j = 1:number_stimuli % loop over stimuli
-        key_pressesf_lab(i,j,:) = key_pressesf_lab(i,j,:)./NumberofSoundsPlayed_lab(i,j);
+        key_pressesf_lab(i, j, :) = key_pressesf_lab(i, j, :)./NumberofSoundsPlayed_lab(i, j);
     end
 end
 
 %% Slider question data
-slider_q_lab = NaN(size(Sliders_lab,1),number_stimuli,size(Sliders_lab,3));
+slider_q_lab = NaN(size(Sliders_lab, 1), number_stimuli, size(Sliders_lab, 3));
 for question = 1:3
-    questiondata_lab=squeeze(Sliders_lab(:,:,question));
+    questiondata_lab=squeeze(Sliders_lab(:, :, question));
     for i=1:size(Sliders_lab, 1)
         for i2 = 1:number_stimuli
-            indexes = find(SoundIDs_lab(i,:) == i2);
-            slider_q_lab(i,i2,question) = mean(questiondata_lab(i,indexes),'omitnan');
+            indexes = find(SoundIDs_lab(i, :) == i2);
+            slider_q_lab(i, i2, question) = mean(questiondata_lab(i, indexes), 'omitnan');
         end
     end
 end
@@ -223,22 +240,23 @@ end
 %% Correct for the typo that sound file 28 (tone_500Hz) is actually file 29 (tone_1000Hz)
 dummy = slider_q_lab (:,28,:);
 slider_q_lab(:,28,:) = slider_q_lab(:,29,:);
-slider_q_lab(:,29,:) = dummy; clear dummy
+slider_q_lab(:,29,:) = dummy;
+clear dummy;
 
 %% Combine data
 key_pressesf_combined = key_pressesf;
 % combine with lab data
-key_pressesf_combined(size(key_pressesf,1) + 1:size(key_pressesf,1) + size(key_pressesf_lab,1),:,:) = key_pressesf_lab;
+key_pressesf_combined(size(key_pressesf, 1) + 1:size(key_pressesf, 1) + size(key_pressesf_lab, 1), :, :) = key_pressesf_lab;
 slider_q_combined = slider_q;
 % combine with lab data
-slider_q_combined(size(slider_q,1)+1:size(slider_q,1) + size(slider_q_lab,1),:,:) = slider_q_lab; 
+slider_q_combined(size(slider_q, 1) + 1:size(slider_q, 1) + size(slider_q_lab,1), :, :) = slider_q_lab; 
 
 if SHOW_OUTPUT
     %% ************************************************************************
     %% OUTPUT
     %% ************************************************************************
     
-    time = (0.05:0.1:size(key_pressesf,3)/10)'; % Time vector
+    time = (0.05:0.1:size(key_pressesf, 3) / 10)'; % Time vector
     V = 1:10:141;
     
     %% Most common countries (after filtering)
@@ -384,50 +402,62 @@ if SHOW_OUTPUT
 
     %% Figure 6/A2. Scatter plot of perceived annoyance and loudness of the 30 stimuli.
     figure
-    for i=1:30
-        if i<=15
-            scatter1=scatter(X(i,5),X(i,4),200,'markerfacecolor',cm(i,:),'markeredgecolor',cm(i,:));hold on;grid on
+    for i = 1:30
+        if i <= 15
+            scatter1 = scatter(X(i, 5), X(i, 4), 200, ...
+                               'markerfacecolor', cm(i, :), ...
+                               'markeredgecolor', cm(i, :));
+            hold on;
+            grid on;
         else
-            scatter1=scatter(X(i,5),X(i,4),200,'markerfacecolor','w','markeredgecolor',cm(i-15,:),'linewidth',3);hold on;grid on
+            scatter1 = scatter(X(i, 5), X(i, 4), 200, ...
+                               'markerfacecolor', 'w', ...
+                               'markeredgecolor', cm(i - 15, :), ...
+                               'linewidth',3);
+            hold on;
+            grid on;
         end
-        scatter1.MarkerFaceAlpha = .8;
-        text(X(i,5)+0.4,X(i,4),char(sound_info(i,4)),'horizontalalignment','left','fontsize',16)
+        scatter1.MarkerFaceAlpha = 0.8;
+        text(X(i, 5) + 0.0035, X(i, 4), ...
+             char(sound_info(i, 4)), ...
+             'horizontalalignment', 'left', ...
+             'fontsize', 16)
     end
-    set(gca,'fontsize',20)
+    set(gca,'fontsize', 20)
     axis square
-    xlabel('Loudness (sones)','fontsize',20)
-    ylabel('Annoying (0-10)','fontsize',20)
+    xlabel('Loudness (sones)','fontsize', 20)
+    ylabel('Annoying (0-10)','fontsize', 20)
     % maximise and export as eps and jpg
     export_figure(gcf, [config.path_output filesep 'scatter-annoyance-loudness'], 'epsc')
     export_figure(gcf, [config.path_figures filesep 'scatter-annoyance-loudness'], 'jpg')
 
     %% Figure 7/A3. Scatter plot of perceived annoyance and perceived /easy to notice of the 30 stimuli.
     figure
-    for i=1:30
-        if i<=15
-            scatter1 = scatter(X(i,2), ...
-                               X(i,4), ...
+    for i = 1:30
+        if i <= 15
+            scatter1 = scatter(X(i, 2), ...
+                               X(i, 4), ...
                                200, ...
-                               'markerfacecolor', cm(i,:), ...
-                               'markeredgecolor', cm(i,:));
+                               'markerfacecolor', cm(i, :), ...
+                               'markeredgecolor', cm(i, :));
             hold on;
             grid on;
         else
-            scatter1 = scatter(X(i,2), ...
-                               X(i,4), ...
+            scatter1 = scatter(X(i, 2), ...
+                               X(i, 4), ...
                                200, ...
                                'markerfacecolor', ...
                                'w', ...
                                'markeredgecolor', ...
-                               cm(i-15,:), ...
-                               'linewidth',3);
+                               cm(i - 15, :), ...
+                               'linewidth', 3);
             hold on;
             grid on;
         end
         scatter1.MarkerFaceAlpha = 0.8;
-        text(X(i,2) + 0.017, ...
-             X(i,4), ...
-             char(sound_info(i,4)), ...
+        text(X(i, 2) + 0.017, ...
+             X(i, 4), ...
+             char(sound_info(i, 4)), ...
              'horizontalalignment', 'left', ...
              'fontsize', 16)
     end
@@ -443,34 +473,34 @@ if SHOW_OUTPUT
     figure
     for i = 1:30
         if i <= 15
-            scatter1 = scatter(X(i,4), ...
-                               X(i,1), ...
+            scatter1 = scatter(X(i, 4), ...
+                               X(i, 1), ...
                                200, ...
-                               'markerfacecolor', cm(i,:), ...
-                               'markeredgecolor', cm(i,:));
+                               'markerfacecolor', cm(i, :), ...
+                               'markeredgecolor', cm(i, :));
             hold on;
             grid on;
         else
-            scatter1 = scatter(X(i,4), ...
-                               X(i,1), ...
+            scatter1 = scatter(X(i, 4), ...
+                               X(i, 1), ...
                                200, ...
                                'markerfacecolor', 'w', ...
-                               'markeredgecolor', cm(i-15,:), ...
+                               'markeredgecolor', cm(i - 15, :), ...
                                'linewidth', 3);
             hold on;
             grid on;
         end
         scatter1.MarkerFaceAlpha = 0.8;
-        text(X(i,4) + 0.02, ...
-             X(i,1), ...
-             char(sound_info(i,4)), ...
+        text(X(i, 4) + 0.02, ...
+             X(i, 1), ...
+             char(sound_info(i, 4)), ...
              'horizontalalignment', 'left', ...
              'fontsize', 16)
     end
-    set(gca,'fontsize',20)
+    set(gca,'fontsize', 20)
     axis square
-    xlabel('Annoying (0-10)','fontsize',20)
-    ylabel('Button-press performance (%)','fontsize',20)
+    xlabel('Annoying (0-10)','fontsize', 20)
+    ylabel('Button-press performance (%)','fontsize', 20)
     % maximise and export as eps and jpg
     export_figure(gcf, [config.path_output filesep 'scatter-performance-annoyance'], 'epsc')
     export_figure(gcf, [config.path_figures filesep 'scatter-performance-annoyance'], 'jpg')
