@@ -39,6 +39,9 @@ var n_sounds_per_block = 5; // number of sounds to save data from
 var sound_prefix = 'sounds/sound_'; // prefix for videos
 var image_prefix = 'img/'; // prefix for images
 var SHOW_DEBUG = false; // switch for debugging output
+var PROLIFIC_PID = 0; // Prolific PID
+var STUDY_ID = 0; // Prolific study ID
+var SESSION_ID = 0; // Prolific session ID
 
  /**
  * Returns a random integer between min (inclusive) and max (inclusive).
@@ -104,14 +107,53 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+// fetch from the URL param
 var debug = getUrlParameter('debug');
-if (!debug) {
+// if not provided, use CONST
+if (typeof debug == undefined) {
     debug = SHOW_DEBUG;
+} else {
+    // convert from string to bool
+    debug = /^true$/i.test(debug);
 }
 
 if (debug) {
-	console.log('debug', debug);
+    console.log('debug', debug);
 }
+
+// fetch from the URL param
+var prolific_pid = getUrlParameter('prolific_pid');
+// if not provided, use CONST
+if (typeof prolific_pid == undefined) {
+    prolific_pid = PROLIFIC_PID;
+} 
+
+if (debug) {
+    console.log('prolific_pid', prolific_pid);
+}
+
+// fetch from the URL param
+var study_id = getUrlParameter('study_id');
+// if not provided, use CONST
+if (typeof study_id == undefined) {
+    study_id = STUDY_ID;
+} 
+
+if (debug) {
+    console.log('study_id', study_id);
+}
+
+// fetch from the URL param
+var session_id = getUrlParameter('session_id');
+// if not provided, use CONST
+if (typeof session_id == undefined) {
+    session_id = SESSION_ID;
+} 
+
+if (debug) {
+    console.log('session_id', session_id);
+}
+
 
 // Arrays for storing data
 var sound_ids = [];  // IDs of videos in stimuli
@@ -126,7 +168,14 @@ var sound_check_blocks = []; // blocks with sound checks
 var instructions_block = {
     type: 'html-keyboard-response',
     stimulus: '<p>Imagine that you are a pedestrian standing on the side of the road. You will listen to ' + n_sound * n_sound_repeat + ' sounds of vehicles driving by you. When the sound is playing, press and HOLD \'F\' when you feel safe to cross the road in front of the car. You can release the button and then press it again multiple times during the sound. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Sometimes you will be asked to listen to a phrase and type what was said.</p><p>Please make sure that your audio is on. On the next page, you will listen to a song. When you will be listening to the song, adjust your volume level to be able to  hear the song clearly. Do NOT change your volume level till the end of the experiment. Press \'C\' to proceed.</p>',
-    choices: ['C']
+    choices: ['C'],
+    on_finish: function(data) {
+        jsPsych.data.addDataToLastTrial({
+            prolific_pid: prolific_pid,
+            study_id: study_id,
+            session_id: session_id,
+        });
+    }
 };
 // page with instructions for the sound check during blocks
 var sound_check_instructions = {
@@ -248,6 +297,9 @@ var slider_block = {
 var save_data_block = {
     type: 'call-function',
     func: function() {
+        if (debug) {
+            console.log('saving data', jsPsych.data.get().json());
+        }
         $.ajax({
                 type: 'POST',
                 url: '/experiment-data',
@@ -261,6 +313,9 @@ var save_data_block = {
                 alert('A problem occurred while writing to the database. Please contact the researcher for more information.')
                 window.location.href = '/';
             })
+        if (debug) {
+            console.log('data saved');
+        }
     }
 }
 
@@ -292,6 +347,7 @@ for (var i = 0; i <= n_sound * n_sound_repeat; i++) {
 	        console.log('added sound check', i, sound_check_last_id, sound_check_blocks[sound_check_last_id]);
 	    }
     }
+    timeline.push(save_data_block);
     timeline.push(continue_block);  // page with press C to continue
     timeline.push(start_holding_block);  // press F and hold
     timeline.push(sound_stimuli[i]);  // page with the stimulus

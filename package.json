@@ -1,5 +1,5 @@
 {
-  "name": "emhi-videos-multiple-presses",
+  "name": "sound-ev-crowdsourcing",
   "version": "0.0.1",
   "description": "Experiment on eHMI stimuli with videos.",
   "main": "app.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/bazilinskyy/emhi-videos-multiple-presses.git"
+    "url": "https://github.com/bazilinskyy/sound-ev-crowdsourcing.git"
   },
   "author": "Pavlo Bazilinskyy",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bazilinskyy/emhi-videos-multiple-presses/issues"
+    "url": "https://github.com/bazilinskyy/sound-ev-crowdsourcing/issues"
   },
-  "homepage": "https://github.com/bazilinskyy/emhi-videos-multiple-presses",
+  "homepage": "https://github.com/bazilinskyy/sound-ev-crowdsourcing",
   "dependencies": {
     "body-parser": "^1.15.2",
     "ejs": "^2.3.1",
