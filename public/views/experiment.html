@@ -168,14 +168,7 @@ var sound_check_blocks = []; // blocks with sound checks
 var instructions_block = {
     type: 'html-keyboard-response',
     stimulus: '<p>Imagine that you are a pedestrian standing on the side of the road. You will listen to ' + n_sound * n_sound_repeat + ' sounds of vehicles driving by you. When the sound is playing, press and HOLD \'F\' when you feel safe to cross the road in front of the car. You can release the button and then press it again multiple times during the sound. After each sound, you will be asked to answer a few questions. After each ' + n_sound_break + ' sounds you will be able to take a short break. Sometimes you will be asked to listen to a phrase and type what was said.</p><p>Please make sure that your audio is on. On the next page, you will listen to a song. When you will be listening to the song, adjust your volume level to be able to  hear the song clearly. Do NOT change your volume level till the end of the experiment. Press \'C\' to proceed.</p>',
-    choices: ['C'],
-    on_finish: function(data) {
-        jsPsych.data.addDataToLastTrial({
-            prolific_pid: prolific_pid,
-            study_id: study_id,
-            session_id: session_id,
-        });
-    }
+    choices: ['C']
 };
 // page with instructions for the sound check during blocks
 var sound_check_instructions = {
@@ -270,7 +263,10 @@ for (var i = 0; i < n_sound * n_sound_repeat; i++) {
 	    prompt: '<p>Start by <strong>HOLDING</strong> the \'F\' key. Release the key when it becomes unsafe to cross; press again when safe to cross.</p>',
         on_finish: function(data) {
             jsPsych.data.addDataToLastTrial({
-                worker_code: finish_code
+                worker_code: finish_code,
+                prolific_pid: prolific_pid,
+                study_id: study_id,
+                session_id: session_id
             });
         }
     });
