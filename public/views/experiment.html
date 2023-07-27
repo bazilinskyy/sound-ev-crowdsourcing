@@ -122,7 +122,7 @@ if (debug) {
 }
 
 // fetch from the URL param
-var prolific_pid = getUrlParameter('prolific_pid');
+var prolific_pid = getUrlParameter('PROLIFIC_PID');
 // if not provided, use CONST
 if (typeof prolific_pid == undefined) {
     prolific_pid = PROLIFIC_PID;
@@ -133,7 +133,7 @@ if (debug) {
 }
 
 // fetch from the URL param
-var study_id = getUrlParameter('study_id');
+var study_id = getUrlParameter('STUDY_ID');
 // if not provided, use CONST
 if (typeof study_id == undefined) {
     study_id = STUDY_ID;
@@ -144,7 +144,7 @@ if (debug) {
 }
 
 // fetch from the URL param
-var session_id = getUrlParameter('session_id');
+var session_id = getUrlParameter('SESSION_ID');
 // if not provided, use CONST
 if (typeof session_id == undefined) {
     session_id = SESSION_ID;
